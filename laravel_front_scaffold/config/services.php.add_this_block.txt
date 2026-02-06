@@ -1,0 +1,6 @@
+// Pega este bloque al final de config/services.php
+
+'spring_api' => [
+  'base_url' => env('SPRING_API_BASE_URL', 'http://localhost:8080/api'),
+  'timeout'  => (int) env('SPRING_API_TIMEOUT', 8),
+],
