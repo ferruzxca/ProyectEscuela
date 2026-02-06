@@ -3,21 +3,21 @@ CREATE TABLE IF NOT EXISTS carreras (
   nombre VARCHAR(100) NOT NULL,
   sigla VARCHAR(10) NOT NULL UNIQUE,
   activo TINYINT(1) NOT NULL DEFAULT 1
-);
+)$$
 
 CREATE TABLE IF NOT EXISTS turnos (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   nombre VARCHAR(50) NOT NULL,
   sigla VARCHAR(5) NOT NULL UNIQUE,
   activo TINYINT(1) NOT NULL DEFAULT 1
-);
+)$$
 
 CREATE TABLE IF NOT EXISTS grados (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   nombre VARCHAR(50) NOT NULL,
   numero INT NOT NULL UNIQUE,
   activo TINYINT(1) NOT NULL DEFAULT 1
-);
+)$$
 
 CREATE TABLE IF NOT EXISTS grupos (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS grupos (
   CONSTRAINT fk_grupo_turno FOREIGN KEY (turno_id) REFERENCES turnos(id),
   CONSTRAINT fk_grupo_grado FOREIGN KEY (grado_id) REFERENCES grados(id),
   CONSTRAINT uq_grupo_comp UNIQUE (carrera_id, turno_id, grado_id, consecutivo)
-);
+)$$
 
 CREATE TABLE IF NOT EXISTS alumnos (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -43,11 +43,11 @@ CREATE TABLE IF NOT EXISTS alumnos (
   activo TINYINT(1) NOT NULL DEFAULT 1,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_alumno_grupo FOREIGN KEY (grupo_id) REFERENCES grupos(id)
-);
+)$$
 
-DROP TRIGGER IF EXISTS trg_grupos_codigo;
-DROP TRIGGER IF EXISTS trg_grupos_codigo_upd;
-DELIMITER $$
+DROP TRIGGER IF EXISTS trg_grupos_codigo$$
+DROP TRIGGER IF EXISTS trg_grupos_codigo_upd$$
+
 CREATE TRIGGER trg_grupos_codigo
 BEFORE INSERT ON grupos
 FOR EACH ROW
@@ -78,7 +78,8 @@ BEGIN
     '-',
     v_sigla_turno
   );
-END $$
+END$$
+
 CREATE TRIGGER trg_grupos_codigo_upd
 BEFORE UPDATE ON grupos
 FOR EACH ROW
@@ -110,5 +111,4 @@ BEGIN
     '-',
     v_sigla_turno
   );
-END $$
-DELIMITER ;
+END$$
