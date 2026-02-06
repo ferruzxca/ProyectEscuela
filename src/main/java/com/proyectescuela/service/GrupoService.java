@@ -64,6 +64,29 @@ public class GrupoService {
     }
 
     @Transactional
+    public GrupoResponse update(Long id, GrupoRequest request) {
+        Grupo grupo = grupoRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
+        Carrera carrera = carreraRepository.findById(request.getCarreraId())
+                .orElseThrow(() -> new NotFoundException("Carrera no encontrada"));
+        Turno turno = turnoRepository.findById(request.getTurnoId())
+                .orElseThrow(() -> new NotFoundException("Turno no encontrado"));
+        Grado grado = gradoRepository.findById(request.getGradoId())
+                .orElseThrow(() -> new NotFoundException("Grado no encontrado"));
+
+        grupo.setCarrera(carrera);
+        grupo.setTurno(turno);
+        grupo.setGrado(grado);
+        grupo.setConsecutivo(null);
+        grupo.setCodigo("");
+
+        Grupo saved = grupoRepository.save(grupo);
+        Grupo reloaded = grupoRepository.findById(saved.getId())
+                .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
+        return GrupoResponse.from(reloaded);
+    }
+
+    @Transactional
     public void setActivo(Long id, boolean activo) {
         Grupo grupo = grupoRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));

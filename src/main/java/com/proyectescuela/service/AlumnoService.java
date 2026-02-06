@@ -47,6 +47,24 @@ public class AlumnoService {
     }
 
     @Transactional
+    public AlumnoResponse update(Long id, AlumnoRequest request) {
+        Alumno alumno = alumnoRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Alumno no encontrado"));
+        Grupo grupo = grupoRepository.findById(request.getGrupoId())
+                .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
+
+        alumno.setMatricula(request.getMatricula());
+        alumno.setNombre(request.getNombre());
+        alumno.setApellidos(request.getApellidos());
+        alumno.setGrupo(grupo);
+
+        Alumno saved = alumnoRepository.save(alumno);
+        Alumno reloaded = alumnoRepository.findById(saved.getId())
+                .orElseThrow(() -> new NotFoundException("Alumno no encontrado"));
+        return AlumnoResponse.from(reloaded);
+    }
+
+    @Transactional
     public void setActivo(Long id, boolean activo) {
         Alumno alumno = alumnoRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Alumno no encontrado"));

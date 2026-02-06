@@ -35,6 +35,16 @@ public class CarreraService {
     }
 
     @Transactional
+    public CarreraResponse update(Long id, CarreraRequest request) {
+        Carrera carrera = carreraRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Carrera no encontrada"));
+        carrera.setNombre(request.getNombre());
+        carrera.setSigla(request.getSigla());
+        Carrera saved = carreraRepository.save(carrera);
+        return CarreraResponse.from(saved);
+    }
+
+    @Transactional
     public void setActivo(Long id, boolean activo) {
         Carrera carrera = carreraRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Carrera no encontrada"));

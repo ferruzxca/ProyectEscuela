@@ -35,6 +35,16 @@ public class GradoService {
     }
 
     @Transactional
+    public GradoResponse update(Long id, GradoRequest request) {
+        Grado grado = gradoRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Grado no encontrado"));
+        grado.setNombre(request.getNombre());
+        grado.setNumero(request.getNumero());
+        Grado saved = gradoRepository.save(grado);
+        return GradoResponse.from(saved);
+    }
+
+    @Transactional
     public void setActivo(Long id, boolean activo) {
         Grado grado = gradoRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Grado no encontrado"));

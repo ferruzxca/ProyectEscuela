@@ -6,6 +6,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +37,11 @@ public class CarreraController {
     @PostMapping
     public CarreraResponse create(@Valid @RequestBody CarreraRequest request) {
         return carreraService.create(request);
+    }
+
+    @PutMapping("/{id}")
+    public CarreraResponse update(@PathVariable Long id, @Valid @RequestBody CarreraRequest request) {
+        return carreraService.update(id, request);
     }
 
     @PatchMapping("/{id}/activar")

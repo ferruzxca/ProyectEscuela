@@ -35,6 +35,16 @@ public class TurnoService {
     }
 
     @Transactional
+    public TurnoResponse update(Long id, TurnoRequest request) {
+        Turno turno = turnoRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Turno no encontrado"));
+        turno.setNombre(request.getNombre());
+        turno.setSigla(request.getSigla());
+        Turno saved = turnoRepository.save(turno);
+        return TurnoResponse.from(saved);
+    }
+
+    @Transactional
     public void setActivo(Long id, boolean activo) {
         Turno turno = turnoRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Turno no encontrado"));
