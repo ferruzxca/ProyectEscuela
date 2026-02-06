@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'spring_api' => [
+        'base_url' => env('SPRING_API_BASE_URL'),
+        'timeout' => env('SPRING_API_TIMEOUT', 10),
+    ],
+
 ];
