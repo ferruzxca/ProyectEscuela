@@ -23,8 +23,9 @@ public class AlumnoService {
     }
 
     @Transactional(readOnly = true)
-    public List<AlumnoResponse> list() {
-        return alumnoRepository.findAll().stream().map(AlumnoResponse::from).toList();
+    public List<AlumnoResponse> list(boolean includeInactivos) {
+        List<Alumno> data = includeInactivos ? alumnoRepository.findAll() : alumnoRepository.findAllByActivoTrue();
+        return data.stream().map(AlumnoResponse::from).toList();
     }
 
     @Transactional
@@ -43,5 +44,13 @@ public class AlumnoService {
         Alumno reloaded = alumnoRepository.findById(saved.getId())
                 .orElseThrow(() -> new NotFoundException("Alumno no encontrado"));
         return AlumnoResponse.from(reloaded);
+    }
+
+    @Transactional
+    public void setActivo(Long id, boolean activo) {
+        Alumno alumno = alumnoRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Alumno no encontrado"));
+        alumno.setActivo(activo);
+        alumnoRepository.save(alumno);
     }
 }

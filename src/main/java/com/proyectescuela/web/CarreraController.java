@@ -4,10 +4,13 @@ import java.util.List;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.proyectescuela.service.CarreraService;
 import com.proyectescuela.web.dto.CarreraRequest;
@@ -26,12 +29,22 @@ public class CarreraController {
     }
 
     @GetMapping
-    public List<CarreraResponse> list() {
-        return carreraService.list();
+    public List<CarreraResponse> list(@RequestParam(defaultValue = "false") boolean includeInactivos) {
+        return carreraService.list(includeInactivos);
     }
 
     @PostMapping
     public CarreraResponse create(@Valid @RequestBody CarreraRequest request) {
         return carreraService.create(request);
+    }
+
+    @PatchMapping("/{id}/activar")
+    public void activar(@PathVariable Long id) {
+        carreraService.setActivo(id, true);
+    }
+
+    @PatchMapping("/{id}/inactivar")
+    public void inactivar(@PathVariable Long id) {
+        carreraService.setActivo(id, false);
     }
 }

@@ -30,6 +30,10 @@ mvn spring-boot:run
 - `GET/POST /api/grados`
 - `GET/POST /api/grupos`
 - `GET/POST /api/alumnos`
+- `PATCH /api/{recurso}/{id}/activar`
+- `PATCH /api/{recurso}/{id}/inactivar`
+
+Por defecto los GET listan solo activos. Para incluir inactivos:\n`GET /api/{recurso}?includeInactivos=true`
 
 ## Render
 Render no ofrece MySQL administrado; usa un MySQL externo y configura las variables de entorno.

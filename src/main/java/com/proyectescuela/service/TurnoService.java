@@ -19,8 +19,9 @@ public class TurnoService {
     }
 
     @Transactional(readOnly = true)
-    public List<TurnoResponse> list() {
-        return turnoRepository.findAll().stream().map(TurnoResponse::from).toList();
+    public List<TurnoResponse> list(boolean includeInactivos) {
+        List<Turno> data = includeInactivos ? turnoRepository.findAll() : turnoRepository.findAllByActivoTrue();
+        return data.stream().map(TurnoResponse::from).toList();
     }
 
     @Transactional
@@ -31,5 +32,13 @@ public class TurnoService {
         turno.setActivo(true);
         Turno saved = turnoRepository.save(turno);
         return TurnoResponse.from(saved);
+    }
+
+    @Transactional
+    public void setActivo(Long id, boolean activo) {
+        Turno turno = turnoRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Turno no encontrado"));
+        turno.setActivo(activo);
+        turnoRepository.save(turno);
     }
 }

@@ -35,8 +35,9 @@ public class GrupoService {
     }
 
     @Transactional(readOnly = true)
-    public List<GrupoResponse> list() {
-        return grupoRepository.findAll().stream().map(GrupoResponse::from).toList();
+    public List<GrupoResponse> list(boolean includeInactivos) {
+        List<Grupo> data = includeInactivos ? grupoRepository.findAll() : grupoRepository.findAllByActivoTrue();
+        return data.stream().map(GrupoResponse::from).toList();
     }
 
     @Transactional
@@ -60,5 +61,13 @@ public class GrupoService {
         Grupo reloaded = grupoRepository.findById(saved.getId())
                 .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
         return GrupoResponse.from(reloaded);
+    }
+
+    @Transactional
+    public void setActivo(Long id, boolean activo) {
+        Grupo grupo = grupoRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
+        grupo.setActivo(activo);
+        grupoRepository.save(grupo);
     }
 }

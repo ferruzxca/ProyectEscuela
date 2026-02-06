@@ -19,8 +19,9 @@ public class CarreraService {
     }
 
     @Transactional(readOnly = true)
-    public List<CarreraResponse> list() {
-        return carreraRepository.findAll().stream().map(CarreraResponse::from).toList();
+    public List<CarreraResponse> list(boolean includeInactivos) {
+        List<Carrera> data = includeInactivos ? carreraRepository.findAll() : carreraRepository.findAllByActivoTrue();
+        return data.stream().map(CarreraResponse::from).toList();
     }
 
     @Transactional
@@ -31,5 +32,13 @@ public class CarreraService {
         carrera.setActivo(true);
         Carrera saved = carreraRepository.save(carrera);
         return CarreraResponse.from(saved);
+    }
+
+    @Transactional
+    public void setActivo(Long id, boolean activo) {
+        Carrera carrera = carreraRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Carrera no encontrada"));
+        carrera.setActivo(activo);
+        carreraRepository.save(carrera);
     }
 }
