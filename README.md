@@ -51,7 +51,7 @@ Render no ofrece MySQL administrado; usa un MySQL externo y configura las variab
    - Build command: `mvn -q -DskipTests package`
    - Start command: `java -jar target/proyectescuela-0.0.1-SNAPSHOT.jar`
 4) Variables de entorno en Render:
-   - `SPRING_DATASOURCE_URL` = `jdbc:mysql://HOST:PUERTO/DB?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC`
+   - `SPRING_DATASOURCE_URL` = `jdbc:mysql://HOST:PUERTO/DB?sslMode=REQUIRED&allowPublicKeyRetrieval=true&serverTimezone=UTC`
    - `SPRING_DATASOURCE_USERNAME` = `USUARIO`
    - `SPRING_DATASOURCE_PASSWORD` = `PASSWORD`
    - `JAVA_VERSION` = `17`
