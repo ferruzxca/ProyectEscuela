@@ -11,9 +11,9 @@ class CatalogoController extends BaseApiController
         $carreras = $turnos = $grados = [];
 
         try {
-            $carreras = $this->api()->get('/catalogos/carreras')->json() ?? [];
-            $turnos   = $this->api()->get('/catalogos/turnos')->json() ?? [];
-            $grados   = $this->api()->get('/catalogos/grados')->json() ?? [];
+            $carreras = $this->api()->get('/carreras')->json() ?? [];
+            $turnos   = $this->api()->get('/turnos')->json() ?? [];
+            $grados   = $this->api()->get('/grados')->json() ?? [];
         } catch (\Throwable $e) {
             return view('catalogos.index', compact('carreras','turnos','grados'))
                 ->with('api_error', $this->apiErrorMessage($e));
@@ -24,9 +24,12 @@ class CatalogoController extends BaseApiController
 
     public function storeCarrera(Request $request)
     {
-        $data = $request->validate(['nombre' => ['required','string','min:2','max:80']]);
+        $data = $request->validate([
+            'nombre' => ['required','string','min:2','max:100'],
+            'sigla' => ['required','string','min:2','max:10'],
+        ]);
         try {
-            $resp = $this->api()->post('/catalogos/carreras', $data);
+            $resp = $this->api()->post('/carreras', $data);
             if ($resp->failed()) return back()->withErrors(['api' => 'No se pudo registrar carrera. Código: '.$resp->status()]);
             return back()->with('ok', 'Carrera registrada.');
         } catch (\Throwable $e) {
@@ -36,9 +39,12 @@ class CatalogoController extends BaseApiController
 
     public function storeTurno(Request $request)
     {
-        $data = $request->validate(['nombre' => ['required','string','min:2','max:40']]);
+        $data = $request->validate([
+            'nombre' => ['required','string','min:2','max:50'],
+            'sigla' => ['required','string','min:1','max:5'],
+        ]);
         try {
-            $resp = $this->api()->post('/catalogos/turnos', $data);
+            $resp = $this->api()->post('/turnos', $data);
             if ($resp->failed()) return back()->withErrors(['api' => 'No se pudo registrar turno. Código: '.$resp->status()]);
             return back()->with('ok', 'Turno registrado.');
         } catch (\Throwable $e) {
@@ -48,9 +54,12 @@ class CatalogoController extends BaseApiController
 
     public function storeGrado(Request $request)
     {
-        $data = $request->validate(['nombre' => ['required','string','min:1','max:10']]);
+        $data = $request->validate([
+            'nombre' => ['required','string','min:1','max:50'],
+            'numero' => ['required','integer','min:1','max:99'],
+        ]);
         try {
-            $resp = $this->api()->post('/catalogos/grados', $data);
+            $resp = $this->api()->post('/grados', $data);
             if ($resp->failed()) return back()->withErrors(['api' => 'No se pudo registrar grado. Código: '.$resp->status()]);
             return back()->with('ok', 'Grado registrado.');
         } catch (\Throwable $e) {
@@ -61,9 +70,9 @@ class CatalogoController extends BaseApiController
     public function destroyCarrera($id)
     {
         try {
-            $resp = $this->api()->delete("/catalogos/carreras/{$id}");
+            $resp = $this->api()->patch("/carreras/{$id}/inactivar");
             if ($resp->failed()) return back()->withErrors(['api' => 'No se pudo eliminar. Código: '.$resp->status()]);
-            return back()->with('ok', 'Carrera eliminada.');
+            return back()->with('ok', 'Carrera inactivada.');
         } catch (\Throwable $e) {
             return back()->withErrors(['api' => $this->apiErrorMessage($e)]);
         }
@@ -72,7 +81,7 @@ class CatalogoController extends BaseApiController
     public function activateCarrera($id)
     {
         try {
-            $resp = $this->api()->patch("/catalogos/carreras/{$id}/activar");
+            $resp = $this->api()->patch("/carreras/{$id}/activar");
             if ($resp->failed()) return back()->withErrors(['api' => 'No se pudo activar. Código: '.$resp->status()]);
             return back()->with('ok', 'Carrera activada.');
         } catch (\Throwable $e) {

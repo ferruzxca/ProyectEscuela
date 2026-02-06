@@ -11,9 +11,9 @@ class GrupoController extends BaseApiController
         $carreras = $turnos = $grados = [];
 
         try {
-            $carreras = $this->api()->get('/catalogos/carreras')->json() ?? [];
-            $turnos   = $this->api()->get('/catalogos/turnos')->json() ?? [];
-            $grados   = $this->api()->get('/catalogos/grados')->json() ?? [];
+            $carreras = $this->api()->get('/carreras')->json() ?? [];
+            $turnos   = $this->api()->get('/turnos')->json() ?? [];
+            $grados   = $this->api()->get('/grados')->json() ?? [];
         } catch (\Throwable $e) {
             return view('grupos.create', compact('carreras','turnos','grados'))
                 ->with('api_error', $this->apiErrorMessage($e));
@@ -27,12 +27,16 @@ class GrupoController extends BaseApiController
         $data = $request->validate([
             'carrera_id' => ['required'],
             'turno_id'   => ['required'],
-            'grado'      => ['required','string','max:10'],
-            'grupo'      => ['required','string','max:30'],
+            'grado_id'   => ['required'],
         ]);
 
         try {
-            $resp = $this->api()->post('/grupos', $data);
+            $payload = [
+                'carreraId' => $data['carrera_id'],
+                'turnoId' => $data['turno_id'],
+                'gradoId' => $data['grado_id'],
+            ];
+            $resp = $this->api()->post('/grupos', $payload);
 
             if ($resp->failed()) {
                 return back()->withInput()->withErrors([

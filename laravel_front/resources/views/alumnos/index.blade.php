@@ -30,8 +30,8 @@
           @forelse(($alumnos ?? []) as $i => $a)
             @php
               $id = $a['id'] ?? null;
-              $full = trim(($a['nombre'] ?? '').' '.($a['apellido_paterno'] ?? '').' '.($a['apellido_materno'] ?? ''));
-              $grupo = $a['grupo'] ?? $a['grupo_nombre'] ?? $a['grupoClave'] ?? '-';
+              $full = trim(($a['nombre'] ?? '').' '.($a['apellidos'] ?? ''));
+              $grupo = $a['grupoCodigo'] ?? $a['grupo'] ?? $a['grupo_nombre'] ?? '-';
             @endphp
             <tr class="hover:bg-white/5">
               <td class="px-4 py-3 text-slate-300">{{ $i + 1 }}</td>

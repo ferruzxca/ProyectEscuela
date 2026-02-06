@@ -14,6 +14,9 @@
         <input name="nombre" value="{{ old('nombre') }}"
                class="w-full rounded-2xl border border-white/10 bg-slate-950/40 px-4 py-2 outline-none focus:ring-2 focus:ring-sky-500"
                placeholder="Ej. Sistemas" />
+        <input name="sigla" value="{{ old('sigla') }}"
+               class="w-28 rounded-2xl border border-white/10 bg-slate-950/40 px-4 py-2 outline-none focus:ring-2 focus:ring-sky-500"
+               placeholder="ISC" />
         <button class="rounded-2xl bg-sky-500/20 px-4 py-2 hover:bg-sky-500/30 border border-sky-400/20">Registrar</button>
       </form>
 
@@ -30,7 +33,10 @@
             @forelse(($carreras ?? []) as $c)
               @php $id = $c['id'] ?? 0; @endphp
               <tr class="hover:bg-white/5">
-                <td class="px-3 py-2">{{ $c['nombre'] ?? '—' }}</td>
+                <td class="px-3 py-2">
+                  {{ $c['nombre'] ?? '—' }}
+                  <span class="text-xs text-slate-400">{{ $c['sigla'] ?? '' }}</span>
+                </td>
                 <td class="px-3 py-2 text-center">
                   <form method="POST" action="{{ route('catalogos.carreras.destroy', $id) }}" onsubmit="return confirm('¿Eliminar carrera?')">
                     @csrf
@@ -62,12 +68,18 @@
         <input name="nombre"
                class="w-full rounded-2xl border border-white/10 bg-slate-950/40 px-4 py-2 outline-none focus:ring-2 focus:ring-fuchsia-500"
                placeholder="Ej. Vespertino" />
+        <input name="sigla"
+               class="w-24 rounded-2xl border border-white/10 bg-slate-950/40 px-4 py-2 outline-none focus:ring-2 focus:ring-fuchsia-500"
+               placeholder="V" />
         <button class="rounded-2xl bg-fuchsia-500/20 px-4 py-2 hover:bg-fuchsia-500/30 border border-fuchsia-400/20">Registrar</button>
       </form>
 
       <ul class="mt-5 space-y-2">
         @forelse(($turnos ?? []) as $t)
-          <li class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">{{ $t['nombre'] ?? '—' }}</li>
+          <li class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+            {{ $t['nombre'] ?? '—' }}
+            <span class="text-xs text-slate-400">{{ $t['sigla'] ?? '' }}</span>
+          </li>
         @empty
           <li class="text-slate-400">Sin turnos</li>
         @endforelse
@@ -82,13 +94,19 @@
         @csrf
         <input name="nombre"
                class="w-full rounded-2xl border border-white/10 bg-slate-950/40 px-4 py-2 outline-none focus:ring-2 focus:ring-amber-400"
-               placeholder="Ej. 11" />
+               placeholder="Ej. Undécimo" />
+        <input name="numero"
+               class="w-20 rounded-2xl border border-white/10 bg-slate-950/40 px-4 py-2 outline-none focus:ring-2 focus:ring-amber-400"
+               placeholder="11" />
         <button class="rounded-2xl bg-amber-400/20 px-4 py-2 hover:bg-amber-400/30 border border-amber-300/20">Registrar</button>
       </form>
 
       <ul class="mt-5 space-y-2">
         @forelse(($grados ?? []) as $g)
-          <li class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">{{ $g['nombre'] ?? ($g['id'] ?? '—') }}</li>
+          <li class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+            {{ $g['nombre'] ?? '—' }}
+            <span class="text-xs text-slate-400">{{ $g['numero'] ?? '' }}</span>
+          </li>
         @empty
           <li class="text-slate-400">Sin grados</li>
         @endforelse

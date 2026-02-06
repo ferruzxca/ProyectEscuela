@@ -12,6 +12,13 @@
         @csrf
 
         <div>
+          <label class="text-sm text-slate-300">Matrícula</label>
+          <input name="matricula" value="{{ old('matricula') }}"
+                 class="mt-1 w-full rounded-2xl border border-white/10 bg-slate-950/40 px-4 py-3 outline-none focus:ring-2 focus:ring-sky-500"
+                 placeholder="Ej. A12345" />
+        </div>
+
+        <div>
           <label class="text-sm text-slate-300">Nombre</label>
           <input name="nombre" value="{{ old('nombre') }}"
                  class="mt-1 w-full rounded-2xl border border-white/10 bg-slate-950/40 px-4 py-3 outline-none focus:ring-2 focus:ring-sky-500"
@@ -39,7 +46,7 @@
             <option value="">-- Selecciona --</option>
             @foreach (($grupos ?? []) as $g)
               <option value="{{ $g['id'] ?? '' }}" @selected(old('grupo_id') == ($g['id'] ?? ''))>
-                {{ $g['nombre'] ?? ($g['grupo'] ?? 'Grupo') }}
+                {{ $g['codigo'] ?? ($g['grupoCodigo'] ?? 'Grupo') }}
               </option>
             @endforeach
           </select>

@@ -35,7 +35,8 @@ class AlumnoController extends BaseApiController
     public function store(Request $request)
     {
         $data = $request->validate([
-            'nombre'            => ['required','string','min:2','max:60'],
+            'matricula'         => ['required','string','min:3','max:20'],
+            'nombre'            => ['required','string','min:2','max:80'],
             'apellido_paterno'  => ['required','string','min:2','max:60'],
             'apellido_materno'  => ['required','string','min:2','max:60'],
             'grupo_id'          => ['required'],
@@ -44,7 +45,13 @@ class AlumnoController extends BaseApiController
         ]);
 
         try {
-            $resp = $this->api()->post('/alumnos', $data);
+            $payload = [
+                'matricula' => $data['matricula'],
+                'nombre' => $data['nombre'],
+                'apellidos' => trim($data['apellido_paterno'].' '.$data['apellido_materno']),
+                'grupoId' => $data['grupo_id'],
+            ];
+            $resp = $this->api()->post('/alumnos', $payload);
 
             if ($resp->failed()) {
                 return back()->withInput()->withErrors([
@@ -79,11 +86,11 @@ class AlumnoController extends BaseApiController
     public function destroy($id)
     {
         try {
-            $resp = $this->api()->delete("/alumnos/{$id}");
+            $resp = $this->api()->patch("/alumnos/{$id}/inactivar");
             if ($resp->failed()) {
                 return back()->withErrors(['api' => 'No se pudo eliminar. Código: ' . $resp->status()]);
             }
-            return back()->with('ok', 'Alumno eliminado.');
+            return back()->with('ok', 'Alumno inactivado.');
         } catch (\Throwable $e) {
             return back()->withErrors(['api' => $this->apiErrorMessage($e)]);
         }

@@ -38,23 +38,15 @@
 
       <div>
         <label class="text-sm text-slate-300">Grado</label>
-        <select name="grado"
+        <select name="grado_id"
                 class="mt-1 w-full rounded-2xl border border-white/10 bg-slate-950/40 px-4 py-3 outline-none focus:ring-2 focus:ring-fuchsia-500">
           <option value="">-- Selecciona --</option>
           @foreach (($grados ?? []) as $g)
-            <option value="{{ $g['nombre'] ?? ($g['id'] ?? '') }}" @selected(old('grado') == ($g['nombre'] ?? ($g['id'] ?? '')))>
-              {{ $g['nombre'] ?? 'Grado' }}
+            <option value="{{ $g['id'] ?? '' }}" @selected(old('grado_id') == ($g['id'] ?? ''))>
+              {{ $g['nombre'] ?? 'Grado' }}{{ isset($g['numero']) ? ' ('.$g['numero'].')' : '' }}
             </option>
           @endforeach
         </select>
-      </div>
-
-      <div class="sm:col-span-2">
-        <label class="text-sm text-slate-300">Grupo (clave)</label>
-        <input name="grupo" value="{{ old('grupo') }}"
-               class="mt-1 w-full rounded-2xl border border-white/10 bg-slate-950/40 px-4 py-3 outline-none focus:ring-2 focus:ring-fuchsia-500"
-               placeholder="Ej. ISX1101-V" />
-        <p class="mt-2 text-xs text-slate-400">Tu API puede generar esta clave automáticamente si prefieren.</p>
       </div>
 
       <div class="sm:col-span-2">
