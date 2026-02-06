@@ -8,7 +8,16 @@ abstract class BaseApiController extends Controller
 {
     protected function api()
     {
-        return Http::baseUrl(config('services.spring_api.base_url'))
+        $baseUrl = config('services.spring_api.base_url') ?? env('SPRING_API_BASE_URL');
+        $baseUrl = is_string($baseUrl) ? rtrim($baseUrl, '/') : '';
+        if ($baseUrl === '') {
+            throw new \RuntimeException('SPRING_API_BASE_URL no está configurada');
+        }
+        if (!str_ends_with($baseUrl, '/api')) {
+            $baseUrl .= '/api';
+        }
+
+        return Http::baseUrl($baseUrl)
             ->timeout(config('services.spring_api.timeout'))
             ->acceptJson();
     }
