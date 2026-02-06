@@ -30,8 +30,14 @@ public class AlumnoService {
 
     @Transactional
     public AlumnoResponse create(AlumnoRequest request) {
+        if (alumnoRepository.existsByMatricula(request.getMatricula())) {
+            throw new IllegalArgumentException("Matrícula duplicada");
+        }
         Grupo grupo = grupoRepository.findById(request.getGrupoId())
                 .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
+        if (!grupo.isActivo()) {
+            throw new IllegalArgumentException("Grupo inactivo");
+        }
 
         Alumno alumno = new Alumno();
         alumno.setMatricula(request.getMatricula());
@@ -48,10 +54,16 @@ public class AlumnoService {
 
     @Transactional
     public AlumnoResponse update(Long id, AlumnoRequest request) {
+        if (alumnoRepository.existsByMatriculaAndIdNot(request.getMatricula(), id)) {
+            throw new IllegalArgumentException("Matrícula duplicada");
+        }
         Alumno alumno = alumnoRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Alumno no encontrado"));
         Grupo grupo = grupoRepository.findById(request.getGrupoId())
                 .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
+        if (!grupo.isActivo()) {
+            throw new IllegalArgumentException("Grupo inactivo");
+        }
 
         alumno.setMatricula(request.getMatricula());
         alumno.setNombre(request.getNombre());

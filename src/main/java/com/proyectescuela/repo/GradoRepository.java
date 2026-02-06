@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface GradoRepository extends JpaRepository<Grado, Long> {
     List<Grado> findAllByActivoTrue();
+    boolean existsByNumero(Integer numero);
+    boolean existsByNumeroAndIdNot(Integer numero, Long id);
 }

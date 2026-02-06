@@ -2,6 +2,11 @@
 
 API en Spring Boot para registro de alumnos, grupos y catálogos (carreras, turnos, grados).
 
+## GitHub
+```text
+https://github.com/ferruzxca/ProyectEscuela
+```
+
 ## Requisitos
 - Java 17
 - MySQL 8+

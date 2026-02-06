@@ -25,4 +25,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> handleValidation(MethodArgumentNotValidException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiError("Validación inválida"));
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiError> handleIllegalArgument(IllegalArgumentException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiError(ex.getMessage()));
+    }
 }

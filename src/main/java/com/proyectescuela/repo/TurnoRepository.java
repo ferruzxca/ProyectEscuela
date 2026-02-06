@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface TurnoRepository extends JpaRepository<Turno, Long> {
     List<Turno> findAllByActivoTrue();
+    boolean existsBySigla(String sigla);
+    boolean existsBySiglaAndIdNot(String sigla, Long id);
 }

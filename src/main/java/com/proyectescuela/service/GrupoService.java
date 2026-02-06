@@ -48,6 +48,7 @@ public class GrupoService {
                 .orElseThrow(() -> new NotFoundException("Turno no encontrado"));
         Grado grado = gradoRepository.findById(request.getGradoId())
                 .orElseThrow(() -> new NotFoundException("Grado no encontrado"));
+        validarActivos(carrera, turno, grado);
 
         Grupo grupo = new Grupo();
         grupo.setCarrera(carrera);
@@ -73,6 +74,7 @@ public class GrupoService {
                 .orElseThrow(() -> new NotFoundException("Turno no encontrado"));
         Grado grado = gradoRepository.findById(request.getGradoId())
                 .orElseThrow(() -> new NotFoundException("Grado no encontrado"));
+        validarActivos(carrera, turno, grado);
 
         grupo.setCarrera(carrera);
         grupo.setTurno(turno);
@@ -84,6 +86,18 @@ public class GrupoService {
         Grupo reloaded = grupoRepository.findById(saved.getId())
                 .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
         return GrupoResponse.from(reloaded);
+    }
+
+    private void validarActivos(Carrera carrera, Turno turno, Grado grado) {
+        if (!carrera.isActivo()) {
+            throw new IllegalArgumentException("Carrera inactiva");
+        }
+        if (!turno.isActivo()) {
+            throw new IllegalArgumentException("Turno inactivo");
+        }
+        if (!grado.isActivo()) {
+            throw new IllegalArgumentException("Grado inactivo");
+        }
     }
 
     @Transactional

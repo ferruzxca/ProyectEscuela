@@ -26,6 +26,9 @@ public class TurnoService {
 
     @Transactional
     public TurnoResponse create(TurnoRequest request) {
+        if (turnoRepository.existsBySigla(request.getSigla())) {
+            throw new IllegalArgumentException("Sigla de turno duplicada");
+        }
         Turno turno = new Turno();
         turno.setNombre(request.getNombre());
         turno.setSigla(request.getSigla());
@@ -36,6 +39,9 @@ public class TurnoService {
 
     @Transactional
     public TurnoResponse update(Long id, TurnoRequest request) {
+        if (turnoRepository.existsBySiglaAndIdNot(request.getSigla(), id)) {
+            throw new IllegalArgumentException("Sigla de turno duplicada");
+        }
         Turno turno = turnoRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Turno no encontrado"));
         turno.setNombre(request.getNombre());

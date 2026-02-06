@@ -26,6 +26,9 @@ public class CarreraService {
 
     @Transactional
     public CarreraResponse create(CarreraRequest request) {
+        if (carreraRepository.existsBySigla(request.getSigla())) {
+            throw new IllegalArgumentException("Sigla de carrera duplicada");
+        }
         Carrera carrera = new Carrera();
         carrera.setNombre(request.getNombre());
         carrera.setSigla(request.getSigla());
@@ -36,6 +39,9 @@ public class CarreraService {
 
     @Transactional
     public CarreraResponse update(Long id, CarreraRequest request) {
+        if (carreraRepository.existsBySiglaAndIdNot(request.getSigla(), id)) {
+            throw new IllegalArgumentException("Sigla de carrera duplicada");
+        }
         Carrera carrera = carreraRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Carrera no encontrada"));
         carrera.setNombre(request.getNombre());

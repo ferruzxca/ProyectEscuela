@@ -26,6 +26,9 @@ public class GradoService {
 
     @Transactional
     public GradoResponse create(GradoRequest request) {
+        if (gradoRepository.existsByNumero(request.getNumero())) {
+            throw new IllegalArgumentException("Número de grado duplicado");
+        }
         Grado grado = new Grado();
         grado.setNombre(request.getNombre());
         grado.setNumero(request.getNumero());
@@ -36,6 +39,9 @@ public class GradoService {
 
     @Transactional
     public GradoResponse update(Long id, GradoRequest request) {
+        if (gradoRepository.existsByNumeroAndIdNot(request.getNumero(), id)) {
+            throw new IllegalArgumentException("Número de grado duplicado");
+        }
         Grado grado = gradoRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Grado no encontrado"));
         grado.setNombre(request.getNombre());

@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface CarreraRepository extends JpaRepository<Carrera, Long> {
     List<Carrera> findAllByActivoTrue();
+    boolean existsBySigla(String sigla);
+    boolean existsBySiglaAndIdNot(String sigla, Long id);
 }
