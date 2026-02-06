@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: proyectescuela-api
+    env: java
+    plan: free
+    buildCommand: mvn -q -DskipTests package
+    startCommand: java -jar target/proyectescuela-0.0.1-SNAPSHOT.jar
+    envVars:
+      - key: JAVA_VERSION
+        value: 17
+      - key: SPRING_DATASOURCE_URL
+        sync: false
+      - key: SPRING_DATASOURCE_USERNAME
+        sync: false
+      - key: SPRING_DATASOURCE_PASSWORD
+        sync: false
