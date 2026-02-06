@@ -19,8 +19,9 @@ public class GradoService {
     }
 
     @Transactional(readOnly = true)
-    public List<GradoResponse> list() {
-        return gradoRepository.findAll().stream().map(GradoResponse::from).toList();
+    public List<GradoResponse> list(boolean includeInactivos) {
+        List<Grado> data = includeInactivos ? gradoRepository.findAll() : gradoRepository.findAllByActivoTrue();
+        return data.stream().map(GradoResponse::from).toList();
     }
 
     @Transactional
@@ -31,5 +32,13 @@ public class GradoService {
         grado.setActivo(true);
         Grado saved = gradoRepository.save(grado);
         return GradoResponse.from(saved);
+    }
+
+    @Transactional
+    public void setActivo(Long id, boolean activo) {
+        Grado grado = gradoRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Grado no encontrado"));
+        grado.setActivo(activo);
+        gradoRepository.save(grado);
     }
 }
