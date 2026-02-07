@@ -61,10 +61,24 @@ public class GrupoService {
         grupo.setCodigo(codigo);
         grupo.setActivo(true);
 
-        Grupo saved = grupoRepository.save(grupo);
-        Grupo reloaded = grupoRepository.findById(saved.getId())
-                .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
-        return GrupoResponse.from(reloaded);
+        try {
+            Grupo saved = grupoRepository.save(grupo);
+            Grupo reloaded = grupoRepository.findById(saved.getId())
+                    .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
+            return GrupoResponse.from(reloaded);
+        } catch (org.springframework.dao.DataIntegrityViolationException ex) {
+            int retry = next + 1;
+            while (grupoRepository.existsByCarreraIdAndTurnoIdAndGradoIdAndConsecutivo(
+                    carrera.getId(), turno.getId(), grado.getId(), retry)) {
+                retry++;
+            }
+            grupo.setConsecutivo(retry);
+            grupo.setCodigo(buildCodigo(carrera.getSigla(), grado.getNumero(), retry, turno.getSigla()));
+            Grupo saved = grupoRepository.save(grupo);
+            Grupo reloaded = grupoRepository.findById(saved.getId())
+                    .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
+            return GrupoResponse.from(reloaded);
+        }
     }
 
     @Transactional
@@ -88,10 +102,24 @@ public class GrupoService {
         grupo.setConsecutivo(next);
         grupo.setCodigo(codigo);
 
-        Grupo saved = grupoRepository.save(grupo);
-        Grupo reloaded = grupoRepository.findById(saved.getId())
-                .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
-        return GrupoResponse.from(reloaded);
+        try {
+            Grupo saved = grupoRepository.save(grupo);
+            Grupo reloaded = grupoRepository.findById(saved.getId())
+                    .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
+            return GrupoResponse.from(reloaded);
+        } catch (org.springframework.dao.DataIntegrityViolationException ex) {
+            int retry = next + 1;
+            while (grupoRepository.existsByCarreraIdAndTurnoIdAndGradoIdAndConsecutivo(
+                    carrera.getId(), turno.getId(), grado.getId(), retry)) {
+                retry++;
+            }
+            grupo.setConsecutivo(retry);
+            grupo.setCodigo(buildCodigo(carrera.getSigla(), grado.getNumero(), retry, turno.getSigla()));
+            Grupo saved = grupoRepository.save(grupo);
+            Grupo reloaded = grupoRepository.findById(saved.getId())
+                    .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
+            return GrupoResponse.from(reloaded);
+        }
     }
 
     private void validarActivos(Carrera carrera, Turno turno, Grado grado) {
