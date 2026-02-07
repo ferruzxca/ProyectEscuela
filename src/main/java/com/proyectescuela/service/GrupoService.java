@@ -50,35 +50,7 @@ public class GrupoService {
                 .orElseThrow(() -> new NotFoundException("Grado no encontrado"));
         validarActivos(carrera, turno, grado);
 
-        int next = nextConsecutivo(carrera.getId(), turno.getId(), grado.getId());
-        String codigo = buildCodigo(carrera.getSigla(), grado.getNumero(), next, turno.getSigla());
-
-        Grupo grupo = new Grupo();
-        grupo.setCarrera(carrera);
-        grupo.setTurno(turno);
-        grupo.setGrado(grado);
-        grupo.setConsecutivo(next);
-        grupo.setCodigo(codigo);
-        grupo.setActivo(true);
-
-        try {
-            Grupo saved = grupoRepository.save(grupo);
-            Grupo reloaded = grupoRepository.findById(saved.getId())
-                    .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
-            return GrupoResponse.from(reloaded);
-        } catch (org.springframework.dao.DataIntegrityViolationException ex) {
-            int retry = next + 1;
-            while (grupoRepository.existsByCarreraIdAndTurnoIdAndGradoIdAndConsecutivo(
-                    carrera.getId(), turno.getId(), grado.getId(), retry)) {
-                retry++;
-            }
-            grupo.setConsecutivo(retry);
-            grupo.setCodigo(buildCodigo(carrera.getSigla(), grado.getNumero(), retry, turno.getSigla()));
-            Grupo saved = grupoRepository.save(grupo);
-            Grupo reloaded = grupoRepository.findById(saved.getId())
-                    .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
-            return GrupoResponse.from(reloaded);
-        }
+        return createWithRetry(carrera, turno, grado, 0);
     }
 
     @Transactional
@@ -93,33 +65,10 @@ public class GrupoService {
                 .orElseThrow(() -> new NotFoundException("Grado no encontrado"));
         validarActivos(carrera, turno, grado);
 
-        int next = nextConsecutivo(carrera.getId(), turno.getId(), grado.getId());
-        String codigo = buildCodigo(carrera.getSigla(), grado.getNumero(), next, turno.getSigla());
-
         grupo.setCarrera(carrera);
         grupo.setTurno(turno);
         grupo.setGrado(grado);
-        grupo.setConsecutivo(next);
-        grupo.setCodigo(codigo);
-
-        try {
-            Grupo saved = grupoRepository.save(grupo);
-            Grupo reloaded = grupoRepository.findById(saved.getId())
-                    .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
-            return GrupoResponse.from(reloaded);
-        } catch (org.springframework.dao.DataIntegrityViolationException ex) {
-            int retry = next + 1;
-            while (grupoRepository.existsByCarreraIdAndTurnoIdAndGradoIdAndConsecutivo(
-                    carrera.getId(), turno.getId(), grado.getId(), retry)) {
-                retry++;
-            }
-            grupo.setConsecutivo(retry);
-            grupo.setCodigo(buildCodigo(carrera.getSigla(), grado.getNumero(), retry, turno.getSigla()));
-            Grupo saved = grupoRepository.save(grupo);
-            Grupo reloaded = grupoRepository.findById(saved.getId())
-                    .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
-            return GrupoResponse.from(reloaded);
-        }
+        return updateWithRetry(grupo, carrera, turno, grado, 0);
     }
 
     private void validarActivos(Carrera carrera, Turno turno, Grado grado) {
@@ -147,6 +96,51 @@ public class GrupoService {
         String grado = String.format("%02d", gradoNumero == null ? 0 : gradoNumero);
         String cons = String.format("%02d", consecutivo);
         return siglaCarrera + grado + cons + "-" + siglaTurno;
+    }
+
+    private GrupoResponse createWithRetry(Carrera carrera, Turno turno, Grado grado, int attempt) {
+        if (attempt > 20) {
+            throw new IllegalArgumentException("No se pudo generar un grupo único");
+        }
+        int next = nextConsecutivo(carrera.getId(), turno.getId(), grado.getId());
+        String codigo = buildCodigo(carrera.getSigla(), grado.getNumero(), next, turno.getSigla());
+
+        Grupo grupo = new Grupo();
+        grupo.setCarrera(carrera);
+        grupo.setTurno(turno);
+        grupo.setGrado(grado);
+        grupo.setConsecutivo(next);
+        grupo.setCodigo(codigo);
+        grupo.setActivo(true);
+
+        try {
+            Grupo saved = grupoRepository.save(grupo);
+            Grupo reloaded = grupoRepository.findById(saved.getId())
+                    .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
+            return GrupoResponse.from(reloaded);
+        } catch (org.springframework.dao.DataIntegrityViolationException ex) {
+            return createWithRetry(carrera, turno, grado, attempt + 1);
+        }
+    }
+
+    private GrupoResponse updateWithRetry(Grupo grupo, Carrera carrera, Turno turno, Grado grado, int attempt) {
+        if (attempt > 20) {
+            throw new IllegalArgumentException("No se pudo generar un grupo único");
+        }
+        int next = nextConsecutivo(carrera.getId(), turno.getId(), grado.getId());
+        String codigo = buildCodigo(carrera.getSigla(), grado.getNumero(), next, turno.getSigla());
+
+        grupo.setConsecutivo(next);
+        grupo.setCodigo(codigo);
+
+        try {
+            Grupo saved = grupoRepository.save(grupo);
+            Grupo reloaded = grupoRepository.findById(saved.getId())
+                    .orElseThrow(() -> new NotFoundException("Grupo no encontrado"));
+            return GrupoResponse.from(reloaded);
+        } catch (org.springframework.dao.DataIntegrityViolationException ex) {
+            return updateWithRetry(grupo, carrera, turno, grado, attempt + 1);
+        }
     }
 
     @Transactional
