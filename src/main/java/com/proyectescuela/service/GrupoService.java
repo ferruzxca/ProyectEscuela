@@ -108,7 +108,11 @@ public class GrupoService {
 
     private int nextConsecutivo(Long carreraId, Long turnoId, Long gradoId) {
         Integer max = grupoRepository.findMaxConsecutivo(carreraId, turnoId, gradoId);
-        return (max == null ? 0 : max) + 1;
+        int next = (max == null ? 0 : max) + 1;
+        while (grupoRepository.existsByCarreraIdAndTurnoIdAndGradoIdAndConsecutivo(carreraId, turnoId, gradoId, next)) {
+            next++;
+        }
+        return next;
     }
 
     private String buildCodigo(String siglaCarrera, Integer gradoNumero, int consecutivo, String siglaTurno) {

@@ -16,4 +16,9 @@ public interface GrupoRepository extends JpaRepository<Grupo, Long> {
     Integer findMaxConsecutivo(@Param("carreraId") Long carreraId,
                                @Param("turnoId") Long turnoId,
                                @Param("gradoId") Long gradoId);
+
+    boolean existsByCarreraIdAndTurnoIdAndGradoIdAndConsecutivo(Long carreraId,
+                                                                Long turnoId,
+                                                                Long gradoId,
+                                                                Integer consecutivo);
 }
