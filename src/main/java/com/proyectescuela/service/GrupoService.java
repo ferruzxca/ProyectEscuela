@@ -50,12 +50,15 @@ public class GrupoService {
                 .orElseThrow(() -> new NotFoundException("Grado no encontrado"));
         validarActivos(carrera, turno, grado);
 
+        int next = nextConsecutivo(carrera.getId(), turno.getId(), grado.getId());
+        String codigo = buildCodigo(carrera.getSigla(), grado.getNumero(), next, turno.getSigla());
+
         Grupo grupo = new Grupo();
         grupo.setCarrera(carrera);
         grupo.setTurno(turno);
         grupo.setGrado(grado);
-        grupo.setConsecutivo(null);
-        grupo.setCodigo("");
+        grupo.setConsecutivo(next);
+        grupo.setCodigo(codigo);
         grupo.setActivo(true);
 
         Grupo saved = grupoRepository.save(grupo);
@@ -76,11 +79,14 @@ public class GrupoService {
                 .orElseThrow(() -> new NotFoundException("Grado no encontrado"));
         validarActivos(carrera, turno, grado);
 
+        int next = nextConsecutivo(carrera.getId(), turno.getId(), grado.getId());
+        String codigo = buildCodigo(carrera.getSigla(), grado.getNumero(), next, turno.getSigla());
+
         grupo.setCarrera(carrera);
         grupo.setTurno(turno);
         grupo.setGrado(grado);
-        grupo.setConsecutivo(null);
-        grupo.setCodigo("");
+        grupo.setConsecutivo(next);
+        grupo.setCodigo(codigo);
 
         Grupo saved = grupoRepository.save(grupo);
         Grupo reloaded = grupoRepository.findById(saved.getId())
@@ -98,6 +104,17 @@ public class GrupoService {
         if (!grado.isActivo()) {
             throw new IllegalArgumentException("Grado inactivo");
         }
+    }
+
+    private int nextConsecutivo(Long carreraId, Long turnoId, Long gradoId) {
+        Integer max = grupoRepository.findMaxConsecutivo(carreraId, turnoId, gradoId);
+        return (max == null ? 0 : max) + 1;
+    }
+
+    private String buildCodigo(String siglaCarrera, Integer gradoNumero, int consecutivo, String siglaTurno) {
+        String grado = String.format("%02d", gradoNumero == null ? 0 : gradoNumero);
+        String cons = String.format("%02d", consecutivo);
+        return siglaCarrera + grado + cons + "-" + siglaTurno;
     }
 
     @Transactional
