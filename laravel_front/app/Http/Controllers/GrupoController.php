@@ -39,9 +39,12 @@ class GrupoController extends BaseApiController
             $resp = $this->api()->post('/grupos', $payload);
 
             if ($resp->failed()) {
-                return back()->withInput()->withErrors([
-                    'api' => 'La API rechazó el registro. Código: ' . $resp->status(),
-                ]);
+                $detail = trim($resp->body() ?? '');
+                $msg = 'La API rechazó el registro. Código: ' . $resp->status();
+                if ($detail !== '') {
+                    $msg .= ' - ' . $detail;
+                }
+                return back()->withInput()->withErrors(['api' => $msg]);
             }
 
             return redirect()->route('alumnos.create')->with('ok', 'Grupo registrado.');

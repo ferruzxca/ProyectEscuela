@@ -30,7 +30,14 @@ class CatalogoController extends BaseApiController
         ]);
         try {
             $resp = $this->api()->post('/carreras', $data);
-            if ($resp->failed()) return back()->withErrors(['api' => 'No se pudo registrar carrera. Código: '.$resp->status()]);
+            if ($resp->failed()) {
+                $detail = trim($resp->body() ?? '');
+                $msg = 'No se pudo registrar carrera. Código: ' . $resp->status();
+                if ($detail !== '') {
+                    $msg .= ' - ' . $detail;
+                }
+                return back()->withErrors(['api' => $msg]);
+            }
             return back()->with('ok', 'Carrera registrada.');
         } catch (\Throwable $e) {
             return back()->withErrors(['api' => $this->apiErrorMessage($e)]);
@@ -45,7 +52,14 @@ class CatalogoController extends BaseApiController
         ]);
         try {
             $resp = $this->api()->post('/turnos', $data);
-            if ($resp->failed()) return back()->withErrors(['api' => 'No se pudo registrar turno. Código: '.$resp->status()]);
+            if ($resp->failed()) {
+                $detail = trim($resp->body() ?? '');
+                $msg = 'No se pudo registrar turno. Código: ' . $resp->status();
+                if ($detail !== '') {
+                    $msg .= ' - ' . $detail;
+                }
+                return back()->withErrors(['api' => $msg]);
+            }
             return back()->with('ok', 'Turno registrado.');
         } catch (\Throwable $e) {
             return back()->withErrors(['api' => $this->apiErrorMessage($e)]);
@@ -60,7 +74,14 @@ class CatalogoController extends BaseApiController
         ]);
         try {
             $resp = $this->api()->post('/grados', $data);
-            if ($resp->failed()) return back()->withErrors(['api' => 'No se pudo registrar grado. Código: '.$resp->status()]);
+            if ($resp->failed()) {
+                $detail = trim($resp->body() ?? '');
+                $msg = 'No se pudo registrar grado. Código: ' . $resp->status();
+                if ($detail !== '') {
+                    $msg .= ' - ' . $detail;
+                }
+                return back()->withErrors(['api' => $msg]);
+            }
             return back()->with('ok', 'Grado registrado.');
         } catch (\Throwable $e) {
             return back()->withErrors(['api' => $this->apiErrorMessage($e)]);
@@ -71,7 +92,14 @@ class CatalogoController extends BaseApiController
     {
         try {
             $resp = $this->api()->patch("/carreras/{$id}/inactivar");
-            if ($resp->failed()) return back()->withErrors(['api' => 'No se pudo eliminar. Código: '.$resp->status()]);
+            if ($resp->failed()) {
+                $detail = trim($resp->body() ?? '');
+                $msg = 'No se pudo eliminar. Código: ' . $resp->status();
+                if ($detail !== '') {
+                    $msg .= ' - ' . $detail;
+                }
+                return back()->withErrors(['api' => $msg]);
+            }
             return back()->with('ok', 'Carrera inactivada.');
         } catch (\Throwable $e) {
             return back()->withErrors(['api' => $this->apiErrorMessage($e)]);
@@ -82,7 +110,14 @@ class CatalogoController extends BaseApiController
     {
         try {
             $resp = $this->api()->patch("/carreras/{$id}/activar");
-            if ($resp->failed()) return back()->withErrors(['api' => 'No se pudo activar. Código: '.$resp->status()]);
+            if ($resp->failed()) {
+                $detail = trim($resp->body() ?? '');
+                $msg = 'No se pudo activar. Código: ' . $resp->status();
+                if ($detail !== '') {
+                    $msg .= ' - ' . $detail;
+                }
+                return back()->withErrors(['api' => $msg]);
+            }
             return back()->with('ok', 'Carrera activada.');
         } catch (\Throwable $e) {
             return back()->withErrors(['api' => $this->apiErrorMessage($e)]);

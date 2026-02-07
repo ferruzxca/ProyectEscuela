@@ -54,9 +54,12 @@ class AlumnoController extends BaseApiController
             $resp = $this->api()->post('/alumnos', $payload);
 
             if ($resp->failed()) {
-                return back()->withInput()->withErrors([
-                    'api' => 'La API rechazó el registro. Código: ' . $resp->status(),
-                ]);
+                $detail = trim($resp->body() ?? '');
+                $msg = 'La API rechazó el registro. Código: ' . $resp->status();
+                if ($detail !== '') {
+                    $msg .= ' - ' . $detail;
+                }
+                return back()->withInput()->withErrors(['api' => $msg]);
             }
 
             return redirect()->route('alumnos.index')->with('ok', 'Alumno registrado.');
@@ -75,7 +78,12 @@ class AlumnoController extends BaseApiController
         try {
             $resp = $this->api()->patch("/alumnos/{$id}/activar");
             if ($resp->failed()) {
-                return back()->withErrors(['api' => 'No se pudo activar. Código: ' . $resp->status()]);
+                $detail = trim($resp->body() ?? '');
+                $msg = 'No se pudo activar. Código: ' . $resp->status();
+                if ($detail !== '') {
+                    $msg .= ' - ' . $detail;
+                }
+                return back()->withErrors(['api' => $msg]);
             }
             return back()->with('ok', 'Alumno activado.');
         } catch (\Throwable $e) {
@@ -88,7 +96,12 @@ class AlumnoController extends BaseApiController
         try {
             $resp = $this->api()->patch("/alumnos/{$id}/inactivar");
             if ($resp->failed()) {
-                return back()->withErrors(['api' => 'No se pudo eliminar. Código: ' . $resp->status()]);
+                $detail = trim($resp->body() ?? '');
+                $msg = 'No se pudo eliminar. Código: ' . $resp->status();
+                if ($detail !== '') {
+                    $msg .= ' - ' . $detail;
+                }
+                return back()->withErrors(['api' => $msg]);
             }
             return back()->with('ok', 'Alumno inactivado.');
         } catch (\Throwable $e) {
