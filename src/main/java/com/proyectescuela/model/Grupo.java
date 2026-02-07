@@ -12,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "grupos", uniqueConstraints = {
@@ -43,6 +44,7 @@ public class Grupo {
     @Column(nullable = false)
     private boolean activo;
 
+    @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
