@@ -30,60 +30,61 @@ public class DashboardController {
         String dbVersion = String.valueOf(health.get("dbVersion"));
         String counts = String.valueOf(health.get("counts"));
 
-        return """
-            <!doctype html>
-            <html lang=\"es\">
-            <head>
-              <meta charset=\"utf-8\" />
-              <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />
-              <title>ProyectEscuela API</title>
-              <style>
-                :root { --bg:#0b1020; --card:#121833; --ok:#22c55e; --bad:#ef4444; --muted:#94a3b8; }
-                * { box-sizing: border-box; }
-                body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background: radial-gradient(1200px 800px at 10% -10%, #1b2350, var(--bg)); color:#e2e8f0; }
-                .wrap { max-width: 900px; margin: 40px auto; padding: 0 20px; }
-                .card { background: var(--card); border:1px solid rgba(255,255,255,.08); border-radius: 16px; padding: 20px; box-shadow: 0 20px 60px rgba(0,0,0,.35); }
-                .title { font-size: 28px; font-weight: 700; }
-                .muted { color: var(--muted); }
-                .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 16px; }
-                .pill { display:inline-block; padding: 6px 10px; border-radius: 999px; font-weight: 600; }
-                .ok { background: rgba(34,197,94,.15); color: var(--ok); border:1px solid rgba(34,197,94,.35); }
-                .bad { background: rgba(239,68,68,.12); color: var(--bad); border:1px solid rgba(239,68,68,.35); }
-                a { color:#60a5fa; text-decoration: none; }
-                code { background: rgba(255,255,255,.06); padding: 2px 6px; border-radius: 6px; }
-              </style>
-            </head>
-            <body>
-              <div class=\"wrap\">
-                <div class=\"card\">
-                  <div class=\"title\">ProyectEscuela API</div>
-                  <p class=\"muted\">Estado en tiempo real del backend y base de datos.</p>
-                  <div class=\"grid\">
-                    <div>
-                      <div class=\"muted\">API</div>
-                      <div class=\"pill ok\">ONLINE</div>
-                      <div class=\"muted\" style=\"margin-top:8px\">Inicio</div>
-                      <div><code>""" + startedAt + """</code></div>
-                    </div>
-                    <div>
-                      <div class=\"muted\">Base de datos</div>
-                      <div class=\"pill """ + (dbOk ? "ok" : "bad") + "\">" + dbStatus + "</div>
-                      <div class=\"muted\" style=\"margin-top:8px\">Versión</div>
-                      <div><code>""" + dbVersion + """</code></div>
-                    </div>
-                    <div>
-                      <div class=\"muted\">Accesos</div>
-                      <div style=\"margin-top:8px\"><a href=\"/api/health\">/api/health</a></div>
-                      <div><a href=\"/api/carreras\">/api/carreras</a></div>
-                      <div><a href=\"/api/turnos\">/api/turnos</a></div>
-                    </div>
-                  </div>
-                  <div style=\"margin-top:16px\" class=\"muted\">Conteos: <code>""" + counts + """</code></div>
-                </div>
-              </div>
-            </body>
-            </html>
-            """;
+        StringBuilder html = new StringBuilder();
+        html.append("<!doctype html>");
+        html.append("<html lang=\"es\">");
+        html.append("<head>");
+        html.append("<meta charset=\"utf-8\" />");
+        html.append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />");
+        html.append("<title>ProyectEscuela API</title>");
+        html.append("<style>");
+        html.append(":root{--bg:#0b1020;--card:#121833;--ok:#22c55e;--bad:#ef4444;--muted:#94a3b8;}");
+        html.append("*{box-sizing:border-box;}");
+        html.append("body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;");
+        html.append("background:radial-gradient(1200px 800px at 10% -10%,#1b2350,var(--bg));color:#e2e8f0;}");
+        html.append(".wrap{max-width:900px;margin:40px auto;padding:0 20px;}");
+        html.append(".card{background:var(--card);border:1px solid rgba(255,255,255,.08);border-radius:16px;");
+        html.append("padding:20px;box-shadow:0 20px 60px rgba(0,0,0,.35);}");
+        html.append(".title{font-size:28px;font-weight:700;}");
+        html.append(".muted{color:var(--muted);}");
+        html.append(".grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:16px;}");
+        html.append(".pill{display:inline-block;padding:6px 10px;border-radius:999px;font-weight:600;}");
+        html.append(".ok{background:rgba(34,197,94,.15);color:var(--ok);border:1px solid rgba(34,197,94,.35);}");
+        html.append(".bad{background:rgba(239,68,68,.12);color:var(--bad);border:1px solid rgba(239,68,68,.35);}");
+        html.append("a{color:#60a5fa;text-decoration:none;}code{background:rgba(255,255,255,.06);padding:2px 6px;border-radius:6px;}");
+        html.append("</style>");
+        html.append("</head>");
+        html.append("<body>");
+        html.append("<div class=\"wrap\">");
+        html.append("<div class=\"card\">");
+        html.append("<div class=\"title\">ProyectEscuela API</div>");
+        html.append("<p class=\"muted\">Estado en tiempo real del backend y base de datos.</p>");
+        html.append("<div class=\"grid\">");
+        html.append("<div>");
+        html.append("<div class=\"muted\">API</div>");
+        html.append("<div class=\"pill ok\">ONLINE</div>");
+        html.append("<div class=\"muted\" style=\"margin-top:8px\">Inicio</div>");
+        html.append("<div><code>").append(startedAt).append("</code></div>");
+        html.append("</div>");
+        html.append("<div>");
+        html.append("<div class=\"muted\">Base de datos</div>");
+        html.append("<div class=\"pill ").append(dbOk ? "ok" : "bad").append("\">").append(dbStatus).append("</div>");
+        html.append("<div class=\"muted\" style=\"margin-top:8px\">Versión</div>");
+        html.append("<div><code>").append(dbVersion).append("</code></div>");
+        html.append("</div>");
+        html.append("<div>");
+        html.append("<div class=\"muted\">Accesos</div>");
+        html.append("<div style=\"margin-top:8px\"><a href=\"/api/health\">/api/health</a></div>");
+        html.append("<div><a href=\"/api/carreras\">/api/carreras</a></div>");
+        html.append("<div><a href=\"/api/turnos\">/api/turnos</a></div>");
+        html.append("</div>");
+        html.append("</div>");
+        html.append("<div style=\"margin-top:16px\" class=\"muted\">Conteos: <code>").append(counts).append("</code></div>");
+        html.append("</div>");
+        html.append("</div>");
+        html.append("</body>");
+        html.append("</html>");
+        return html.toString();
     }
 
     @GetMapping("/api/health")
