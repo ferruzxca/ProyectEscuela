@@ -49,11 +49,6 @@ public class AlumnoController {
         return alumnoService.update(id, request);
     }
 
-    @PutMapping("/{id}")
-    public AlumnoResponse update(@PathVariable Long id, @Valid @RequestBody AlumnoRequest request) {
-        return alumnoService.update(id, request);
-    }
-
     @PatchMapping("/{id}/activar")
     public void activar(@PathVariable Long id) {
         alumnoService.setActivo(id, true);
