@@ -34,9 +34,19 @@ public class AlumnoController {
         return alumnoService.list(includeInactivos);
     }
 
+    @GetMapping("/{id}")
+    public AlumnoResponse get(@PathVariable Long id) {
+        return alumnoService.getById(id);
+    }
+
     @PostMapping
     public AlumnoResponse create(@Valid @RequestBody AlumnoRequest request) {
         return alumnoService.create(request);
+    }
+
+    @PutMapping("/{id}")
+    public AlumnoResponse update(@PathVariable Long id, @Valid @RequestBody AlumnoRequest request) {
+        return alumnoService.update(id, request);
     }
 
     @PutMapping("/{id}")

@@ -12,7 +12,8 @@ Route::get('/alumnos', [AlumnoController::class, 'index'])->name('alumnos.index'
 Route::get('/alumnos/crear', [AlumnoController::class, 'create'])->name('alumnos.create');
 Route::post('/alumnos', [AlumnoController::class, 'store'])->name('alumnos.store');
 
-Route::get('/alumnos/{id}/editar', [AlumnoController::class, 'edit'])->name('alumnos.edit'); // placeholder
+Route::get('/alumnos/{id}/editar', [AlumnoController::class, 'edit'])->name('alumnos.edit');
+Route::put('/alumnos/{id}', [AlumnoController::class, 'update'])->name('alumnos.update');
 Route::patch('/alumnos/{id}/activar', [AlumnoController::class, 'activate'])->name('alumnos.activate');
 Route::delete('/alumnos/{id}', [AlumnoController::class, 'destroy'])->name('alumnos.destroy');
 

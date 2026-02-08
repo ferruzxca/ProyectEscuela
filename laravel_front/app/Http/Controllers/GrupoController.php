@@ -11,9 +11,9 @@ class GrupoController extends BaseApiController
         $carreras = $turnos = $grados = [];
 
         try {
-            $carreras = $this->api()->get('/carreras')->json() ?? [];
-            $turnos   = $this->api()->get('/turnos')->json() ?? [];
-            $grados   = $this->api()->get('/grados')->json() ?? [];
+            $carreras = $this->api()->get('/carreras?includeInactivos=true')->json() ?? [];
+            $turnos   = $this->api()->get('/turnos?includeInactivos=true')->json() ?? [];
+            $grados   = $this->api()->get('/grados?includeInactivos=true')->json() ?? [];
         } catch (\Throwable $e) {
             return view('grupos.create', compact('carreras','turnos','grados'))
                 ->with('api_error', $this->apiErrorMessage($e));

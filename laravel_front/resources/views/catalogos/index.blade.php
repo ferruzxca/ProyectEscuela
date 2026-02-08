@@ -32,7 +32,8 @@
           <tbody class="divide-y divide-white/10">
             @forelse(($carreras ?? []) as $c)
               @php $id = $c['id'] ?? 0; @endphp
-              <tr class="hover:bg-white/5">
+              @php $inactive = isset($c['activo']) && !$c['activo']; @endphp
+              <tr class="hover:bg-white/5 {{ $inactive ? 'text-rose-300' : '' }}">
                 <td class="px-3 py-2">
                   {{ $c['nombre'] ?? '—' }}
                   <span class="text-xs text-slate-400">{{ $c['sigla'] ?? '' }}</span>
@@ -76,7 +77,8 @@
 
       <ul class="mt-5 space-y-2">
         @forelse(($turnos ?? []) as $t)
-          <li class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+          @php $inactive = isset($t['activo']) && !$t['activo']; @endphp
+          <li class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 {{ $inactive ? 'text-rose-300' : '' }}">
             {{ $t['nombre'] ?? '—' }}
             <span class="text-xs text-slate-400">{{ $t['sigla'] ?? '' }}</span>
           </li>
@@ -103,7 +105,8 @@
 
       <ul class="mt-5 space-y-2">
         @forelse(($grados ?? []) as $g)
-          <li class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+          @php $inactive = isset($g['activo']) && !$g['activo']; @endphp
+          <li class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 {{ $inactive ? 'text-rose-300' : '' }}">
             {{ $g['nombre'] ?? '—' }}
             <span class="text-xs text-slate-400">{{ $g['numero'] ?? '' }}</span>
           </li>

@@ -16,8 +16,9 @@
                 class="mt-1 w-full rounded-2xl border border-white/10 bg-slate-950/40 px-4 py-3 outline-none focus:ring-2 focus:ring-fuchsia-500">
           <option value="">-- Selecciona --</option>
           @foreach (($carreras ?? []) as $c)
+            @php $inactive = isset($c['activo']) && !$c['activo']; @endphp
             <option value="{{ $c['id'] ?? '' }}" @selected(old('carrera_id') == ($c['id'] ?? ''))>
-              {{ $c['nombre'] ?? 'Carrera' }}
+              {{ $c['nombre'] ?? 'Carrera' }}{{ $inactive ? ' (inactiva)' : '' }}
             </option>
           @endforeach
         </select>
@@ -29,8 +30,9 @@
                 class="mt-1 w-full rounded-2xl border border-white/10 bg-slate-950/40 px-4 py-3 outline-none focus:ring-2 focus:ring-fuchsia-500">
           <option value="">-- Selecciona --</option>
           @foreach (($turnos ?? []) as $t)
+            @php $inactive = isset($t['activo']) && !$t['activo']; @endphp
             <option value="{{ $t['id'] ?? '' }}" @selected(old('turno_id') == ($t['id'] ?? ''))>
-              {{ $t['nombre'] ?? 'Turno' }}
+              {{ $t['nombre'] ?? 'Turno' }}{{ $inactive ? ' (inactivo)' : '' }}
             </option>
           @endforeach
         </select>
@@ -42,8 +44,9 @@
                 class="mt-1 w-full rounded-2xl border border-white/10 bg-slate-950/40 px-4 py-3 outline-none focus:ring-2 focus:ring-fuchsia-500">
           <option value="">-- Selecciona --</option>
           @foreach (($grados ?? []) as $g)
+            @php $inactive = isset($g['activo']) && !$g['activo']; @endphp
             <option value="{{ $g['id'] ?? '' }}" @selected(old('grado_id') == ($g['id'] ?? ''))>
-              {{ $g['nombre'] ?? 'Grado' }}{{ isset($g['numero']) ? ' ('.$g['numero'].')' : '' }}
+              {{ $g['nombre'] ?? 'Grado' }}{{ isset($g['numero']) ? ' ('.$g['numero'].')' : '' }}{{ $inactive ? ' (inactivo)' : '' }}
             </option>
           @endforeach
         </select>

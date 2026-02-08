@@ -45,8 +45,9 @@
                   class="mt-1 w-full rounded-2xl border border-white/10 bg-slate-950/40 px-4 py-3 outline-none focus:ring-2 focus:ring-sky-500">
             <option value="">-- Selecciona --</option>
             @foreach (($grupos ?? []) as $g)
+              @php $inactive = isset($g['activo']) && !$g['activo']; @endphp
               <option value="{{ $g['id'] ?? '' }}" @selected(old('grupo_id') == ($g['id'] ?? ''))>
-                {{ $g['codigo'] ?? ($g['grupoCodigo'] ?? 'Grupo') }}
+                {{ $g['codigo'] ?? ($g['grupoCodigo'] ?? 'Grupo') }}{{ $inactive ? ' (inactivo)' : '' }}
               </option>
             @endforeach
           </select>

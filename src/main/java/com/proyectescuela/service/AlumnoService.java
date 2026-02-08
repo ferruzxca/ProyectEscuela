@@ -28,6 +28,13 @@ public class AlumnoService {
         return data.stream().map(AlumnoResponse::from).toList();
     }
 
+    @Transactional(readOnly = true)
+    public AlumnoResponse getById(Long id) {
+        Alumno alumno = alumnoRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Alumno no encontrado"));
+        return AlumnoResponse.from(alumno);
+    }
+
     @Transactional
     public AlumnoResponse create(AlumnoRequest request) {
         if (alumnoRepository.existsByMatricula(request.getMatricula())) {

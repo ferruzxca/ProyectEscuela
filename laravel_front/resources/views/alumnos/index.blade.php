@@ -32,8 +32,9 @@
               $id = $a['id'] ?? null;
               $full = trim(($a['nombre'] ?? '').' '.($a['apellidos'] ?? ''));
               $grupo = $a['grupoCodigo'] ?? $a['grupo'] ?? $a['grupo_nombre'] ?? '-';
+              $inactive = isset($a['activo']) && !$a['activo'];
             @endphp
-            <tr class="hover:bg-white/5">
+            <tr class="hover:bg-white/5 {{ $inactive ? 'text-rose-300' : '' }}">
               <td class="px-4 py-3 text-slate-300">{{ $i + 1 }}</td>
               <td class="px-4 py-3 font-medium">{{ $full ?: 'Sin nombre' }}</td>
               <td class="px-4 py-3 text-slate-200">{{ $grupo }}</td>
