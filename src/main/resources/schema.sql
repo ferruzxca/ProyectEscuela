@@ -27,7 +27,6 @@ CREATE TABLE IF NOT EXISTS grupos (
   consecutivo INT NOT NULL,
   codigo VARCHAR(20) NOT NULL UNIQUE,
   activo TINYINT(1) NOT NULL DEFAULT 1,
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_grupo_carrera FOREIGN KEY (carrera_id) REFERENCES carreras(id),
   CONSTRAINT fk_grupo_turno FOREIGN KEY (turno_id) REFERENCES turnos(id),
   CONSTRAINT fk_grupo_grado FOREIGN KEY (grado_id) REFERENCES grados(id),
@@ -41,6 +40,5 @@ CREATE TABLE IF NOT EXISTS alumnos (
   apellidos VARCHAR(120) NOT NULL,
   grupo_id BIGINT NOT NULL,
   activo TINYINT(1) NOT NULL DEFAULT 1,
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_alumno_grupo FOREIGN KEY (grupo_id) REFERENCES grupos(id)
 );

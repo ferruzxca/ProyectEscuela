@@ -112,9 +112,6 @@ public class GrupoService {
         grupo.setConsecutivo(next);
         grupo.setCodigo(codigo);
         grupo.setActivo(true);
-        if (grupo.getCreatedAt() == null) {
-            grupo.setCreatedAt(java.time.Instant.now());
-        }
 
         try {
             Grupo saved = grupoRepository.save(grupo);
@@ -135,9 +132,6 @@ public class GrupoService {
 
         grupo.setConsecutivo(next);
         grupo.setCodigo(codigo);
-        if (grupo.getCreatedAt() == null) {
-            grupo.setCreatedAt(java.time.Instant.now());
-        }
 
         try {
             Grupo saved = grupoRepository.save(grupo);

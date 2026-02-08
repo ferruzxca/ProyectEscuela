@@ -45,9 +45,6 @@ public class AlumnoService {
         alumno.setApellidos(request.getApellidos());
         alumno.setGrupo(grupo);
         alumno.setActivo(true);
-        if (alumno.getCreatedAt() == null) {
-            alumno.setCreatedAt(java.time.Instant.now());
-        }
 
         Alumno saved = alumnoRepository.save(alumno);
         Alumno reloaded = alumnoRepository.findById(saved.getId())

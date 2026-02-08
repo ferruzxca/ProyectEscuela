@@ -1,6 +1,5 @@
 package com.proyectescuela.model;
 
-import java.time.Instant;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,7 +10,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "alumnos")
@@ -36,9 +34,6 @@ public class Alumno {
     @Column(nullable = false)
     private boolean activo;
 
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private Instant createdAt;
 
     public Long getId() {
         return id;
@@ -88,11 +83,5 @@ public class Alumno {
         this.activo = activo;
     }
 
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
+    // removed created_at
 }
